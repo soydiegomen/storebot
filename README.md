@@ -1,1 +1,1 @@
-# storebot
+# STOREBOT PROJECT
