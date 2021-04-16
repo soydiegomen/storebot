@@ -1,4 +1,5 @@
 my.cnf
+settings.py
 static
 media
 storebot_api/__pycache__
