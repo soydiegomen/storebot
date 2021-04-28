@@ -17,21 +17,23 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path, include, re_path
-from storebot_api.views import auth
-from storebot_api.views import usuarios
-from storebot_api.views import products
+#from storebot_api.views import auth
+#from storebot_api.views import usuarios
+#from storebot_api.views import products
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('token/', auth.CustomAuthToken.as_view()),
+    path('token/', views.CustomAuthToken.as_view()),
     #User details
-    path('me',usuarios.UsuarioActualView.as_view()),
+    path('me', views.UsuarioActualView.as_view()),
     #Create admin
-    path('usuarios/admin/<str:secret>',usuarios.AdminsView.as_view()),
+    path('usuarios/admin/<str:secret>', views.AdminsView.as_view()),
     #Productos
-    path('products',products.ProductsView.as_view()),
-    path('product/<int:id_producto>',products.ProductsView.as_view()),
-
+    path('products',  views.ProductsView.as_view()),
+    path('product/<int:id_producto>', views.ProductsView.as_view()),
+    #Brands
+    path('brands', views.Brands.as_view()),
 ] 
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
