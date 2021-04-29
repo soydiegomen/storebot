@@ -5,9 +5,6 @@ from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth.models import AbstractUser, User
 from django.conf import settings
 
-class BearerTokenAuthentication(TokenAuthentication):
-    keyword = u"Bearer"
-
 def upload_clientes_logos_path(instance, filename):
     file_path = 'clientes/logos/{filename}'.format(
         id=instance.id, filename=filename) 
