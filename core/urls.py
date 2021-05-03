@@ -5,6 +5,7 @@ from django.urls import path, include, re_path
 from . import views
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path('token/', views.CustomAuthToken.as_view()),
     #User details
     path('me', views.UsuarioActualView.as_view()),

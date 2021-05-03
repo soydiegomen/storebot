@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-#from storebot_api.models import *
 from core.models import *
 
 

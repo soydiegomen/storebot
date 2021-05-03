@@ -1,11 +1,10 @@
-from django.contrib import admin
+
 from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path, include, re_path
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     #Agrego las urls del core
     path(r'', include('core.urls')),        
     #Productos
