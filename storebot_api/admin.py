@@ -1,4 +1,5 @@
 from django.contrib import admin
-from storebot_api.models import *
+from .models import Brand, Product
 
 admin.site.register(Product)
+admin.site.register(Brand)

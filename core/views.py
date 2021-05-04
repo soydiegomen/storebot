@@ -1,26 +1,21 @@
 from django.shortcuts import render
 from django.db.models import *
 from django.db import transaction
-""" from rest_framework.authentication import BasicAuthentication, SessionAuthentication, TokenAuthentication """
-""" from rest_framework.generics import CreateAPIView, DestroyAPIView, UpdateAPIView
-
-
-from rest_framework import status """
 from rest_framework import permissions
 from rest_framework import generics
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
-""" from rest_framework import viewsets """
 from django.shortcuts import get_object_or_404
 from django.core import serializers
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.conf import settings
-from core.serializers import *
-from core.models import *
+from .serializers import UserSerializer
+#from core.serializers import *
+from .models import BearerTokenAuthentication
 
 
 class CustomAuthToken(ObtainAuthToken):
