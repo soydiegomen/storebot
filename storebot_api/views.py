@@ -15,8 +15,8 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from core.serializers import *
-from .models import Brand, Product
-from .serializers import ProductSerializer, BrandSerializer
+from .models import Brand, Product, BrandUrl
+from .serializers import ProductSerializer, BrandSerializer, BrandUrlSerializer
 
 
 class ProductsView(generics.ListAPIView):
@@ -74,6 +74,11 @@ class ProductsView(generics.ListAPIView):
 
 class BrandsViews(APIView):
 
+    def get(self, request):
+        restaurants = Brand.objects.filter(isActive=True).all()
+        serializer = BrandSerializer(restaurants, many=True)
+        return Response(serializer.data)
+
     def post(self, request):
 
         user = request.user
@@ -91,8 +96,38 @@ class BrandsViews(APIView):
         response = BrandSerializer(brand, many=False).data
         
         return Response(response, status=status.HTTP_201_CREATED)
-    
+
+    def put(self, request, *args, **kwargs):
+
+        brand_id = self.kwargs.get("brand_id")
+        brand = get_object_or_404(Brand, id = brand_id)
+
+        brand.name = request.data['name']
+        brand.description = request.data['description']
+        brand.url = request.data['url']
+
+        if 'isActive' in request.data:
+            brand.isActive = request.data['isActive']
+
+        if 'rating' in request.data:
+            brand.rating = request.data['rating']
+        else:
+            brand.rating = None
+        
+        if 'order' in request.data:
+            brand.order = request.data['order']
+        else:
+            brand.order = None
+
+        brand.save()
+
+        response = BrandSerializer(brand, many=False).data
+
+        return Response(response)
+
+class BrandUrlsViews(APIView):
+
     def get(self, request):
-        restaurants = Brand.objects.all()
-        serializer = BrandSerializer(restaurants, many=True)
-        return Response(serializer.data)
+        brand_urls = BrandUrl.objects.filter(isActive=True).all()
+        response = BrandUrlSerializer(brand_urls, many=True)
+        return Response(response.data)

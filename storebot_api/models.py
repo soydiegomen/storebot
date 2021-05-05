@@ -35,12 +35,23 @@ class Brand(models.Model):
     name = models.CharField(max_length=255,null=False, blank=False)
     isActive = models.BooleanField(null=False, blank=False, default=True)
     order = models.IntegerField(null=True, blank=True)
-    url = models.CharField(max_length=255,null=False, blank=False)
+    url = models.CharField(max_length=255,null=True, blank=True)
     description = models.CharField(max_length=255,null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, default=None)
     rating = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    updated_at = models.DateTimeField(auto_now_add=False, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=False, blank=False)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def __str__(self):
         return self.name
+
+class BrandUrl(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, null=False, blank=False)
+    url = models.CharField(max_length=255,null=False, blank=False)
+    isActive = models.BooleanField(null=False, blank=False, default=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=False, blank=False)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.url
