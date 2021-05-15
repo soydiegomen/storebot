@@ -14,6 +14,7 @@ urlpatterns = [
     path('brands', BrandsViews.as_view()),
     path('brands/<int:brand_id>', BrandsViews.as_view()),
     path('brandUrls', BrandUrlsViews.as_view()),
+    path('brandUrls/<int:brandUrl_id>', BrandUrlsViews.as_view()),
 ] 
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

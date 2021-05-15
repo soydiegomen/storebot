@@ -21,11 +21,10 @@ from .serializers import ProductSerializer, BrandSerializer, BrandUrlSerializer
 
 class ProductsView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
-
     
     def get(self, request, *args, **kwargs):
 
-        filter = Q(isActive=True)
+        filter = Q(is_active=True)
 
         description = request.GET.get('description')
         if description:
@@ -63,8 +62,8 @@ class ProductsView(generics.ListAPIView):
         producto.quantity = request.data['quantity']
         producto.price = request.data['price']
 
-        if 'isActive' in request.data:
-            producto.isActive = request.data['isActive']
+        if 'is_active' in request.data:
+            producto.is_active = request.data['is_active']
 
         producto.save()
 
@@ -73,9 +72,10 @@ class ProductsView(generics.ListAPIView):
         return Response(response)
 
 class BrandsViews(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        restaurants = Brand.objects.filter(isActive=True).all()
+        restaurants = Brand.objects.filter(is_active=True).all()
         serializer = BrandSerializer(restaurants, many=True)
         return Response(serializer.data)
 
@@ -106,8 +106,8 @@ class BrandsViews(APIView):
         brand.description = request.data['description']
         brand.url = request.data['url']
 
-        if 'isActive' in request.data:
-            brand.isActive = request.data['isActive']
+        if 'is_active' in request.data:
+            brand.is_active = request.data['is_active']
 
         if 'rating' in request.data:
             brand.rating = request.data['rating']
@@ -126,8 +126,46 @@ class BrandsViews(APIView):
         return Response(response)
 
 class BrandUrlsViews(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        brand_urls = BrandUrl.objects.filter(isActive=True).all()
+        brand_urls = BrandUrl.objects.filter(is_active=True).all()
         response = BrandUrlSerializer(brand_urls, many=True)
         return Response(response.data)
+    
+    def post(self, request):
+
+        id_brand = request.data['id_brand']
+        brand = get_object_or_404(Brand,id = id_brand, is_active = True)
+
+        url = request.data['url']
+
+        brandUrl = BrandUrl.objects.create(url = url, brand = brand)
+
+        response = BrandUrlSerializer(brandUrl, many=False).data
+        
+        return Response(response, status=status.HTTP_201_CREATED)
+
+    def put(self, request, *args, **kwargs):
+
+        brandUrl_id = self.kwargs.get("brandUrl_id")
+        brandUrl = get_object_or_404(BrandUrl, id = brandUrl_id)
+
+        brand_id = request.data['brand_id']
+        brand = get_object_or_404(Brand,id = brand_id, is_active = True)
+        brandUrl.brand = brand
+
+        if 'url' not in request.data:
+            return Response({'message':'The url field is mandatory'}, 400)
+
+        url = request.data['url']
+        brandUrl.url = url
+
+        if 'is_active' in request.data:
+            brandUrl.is_active = request.data['is_active']
+
+        brandUrl.save()
+
+        response = BrandUrlSerializer(brandUrl, many=False).data
+
+        return Response(response)
