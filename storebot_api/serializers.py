@@ -1,13 +1,7 @@
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from .models import Brand, Product, BrandUrl
+from .models import Brand, BrandUrl
 
-
-class ProductSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Product
-        fields = "__all__"
 
 class BrandSerializer(serializers.ModelSerializer):
 
