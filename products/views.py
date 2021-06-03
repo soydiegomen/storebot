@@ -16,6 +16,7 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 from core.serializers import *
 from .models import Product
+from storebot_api.models import Brand
 from .serializers import ProductSerializer
 
 
@@ -36,19 +37,17 @@ class ProductsView(generics.ListAPIView):
     def post(self, request, *args, **kwargs):
         user = request.user
 
-        name = request.data['name']
-        description = request.data['description']
-        quantity = request.data['quantity']
-        price = request.data['price']
+        brand_id = request.data['brand_id']
+        brand = get_object_or_404(Brand,id = brand_id)
 
-        product = Product.objects.create(name = name, user=user, 
-        description=description, quantity=quantity, price= price)
+        data = request.data
+        serializer = ProductSerializer(data=data)
 
-        image = request.data['image']
-        if image:
-            product.image.save(image.name, image, save=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors)
 
-        response = ProductSerializer(product, many=False).data
+        serializer.save(user=user, brand = brand, is_active = True) 
+        response = serializer.data
         
         return Response(response)
 
