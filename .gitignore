@@ -4,5 +4,6 @@ static
 media
 storebot_api/__pycache__
 storebot_api/migrations
-storebot_api/puentes/__pycache__
 storebot_api/views/__pycache__
+products/__pycache__
+products/migrations
