@@ -35,37 +35,41 @@ class ProductsView(generics.ListAPIView):
         return Response(ProductSerializer(products, many=True).data)
 
     def post(self, request, *args, **kwargs):
-        user = request.user
+
+        if 'brand_id' not in request.data:
+            return Response({'message' : 'The brand_id field is required'}, 400)
 
         brand_id = request.data['brand_id']
         brand = get_object_or_404(Brand,id = brand_id)
 
-        data = request.data
-        serializer = ProductSerializer(data=data)
+        serializer = ProductSerializer(data = request.data)
 
         if not serializer.is_valid():
             return Response(serializer.errors)
 
-        serializer.save(user=user, brand = brand, is_active = True) 
-        response = serializer.data
+        #The new products are always active
+        serializer.save(brand = brand, is_active = True) 
         
-        return Response(response)
+        return Response(serializer.data)
 
     def put(self, request, *args, **kwargs):
 
-        id_producto = self.kwargs.get("id_producto")
-        producto = get_object_or_404(Product,id = id_producto)
+        product_id = self.kwargs.get("product_id")
+        producto = get_object_or_404(Product,id = product_id)
 
-        producto.name = request.data['name']
-        producto.description = request.data['description']
-        producto.quantity = request.data['quantity']
-        producto.price = request.data['price']
+        brand_id = request.data['brand_id']
+        brand = get_object_or_404(Brand,id = brand_id)
 
+        is_active = producto.is_active
         if 'is_active' in request.data:
-            producto.is_active = request.data['is_active']
+            is_active = request.data['is_active']
 
-        producto.save()
+        # .save() will update the existing `comment` instance.
+        product_serializer = ProductSerializer(producto, data = request.data)
 
-        response = ProductSerializer(producto, many=False).data
+        if not product_serializer.is_valid():
+            return Response(product_serializer.errors)
 
-        return Response(response)
+        product_serializer.save(brand = brand, is_active = is_active)
+        
+        return Response(product_serializer.data)

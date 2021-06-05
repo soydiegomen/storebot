@@ -6,7 +6,6 @@ from storebot_api.models import Brand
 
 class Product(models.Model):
     id = models.BigAutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, default=None)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, null=False, blank=False, default=None)
     url = models.CharField(max_length=512, null=False, blank=False)
     price = models.DecimalField(null=True, blank=True, max_digits=12, decimal_places=2)
